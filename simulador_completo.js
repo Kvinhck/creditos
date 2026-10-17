@@ -37,8 +37,17 @@ function guardarCliente(){
   let apellido=recuperaraTexto("txtApellido");
   let ingresos=recuperarFloat("txtIngresos");
   let egresos=recuperarFloat("txtEgresos");
-  let clienteGuardado={cedula,nombre,apellido,ingresos,egresos};
-  clientes.push(clienteGuardado);
+
+  let clienteExistente=buscarCliente(cedula);
+  if(clienteExistente==null){
+    let clienteGuardado={cedula,nombre,apellido,ingresos,egresos}
+    clientes.push(clienteGuardado);
+  }else {
+    clienteExistente.nombre=nombre;
+    clienteExistente.apellido=apellido;
+    clienteExistente.ingresos=ingresos;
+    clienteExistente.egresos=egresos;
+  }
   pintarClientes();
 }
 
@@ -52,8 +61,37 @@ function pintarClientes(){
     contenidoTabla+="<td>"+clientes[i].apellido+"</td>";
     contenidoTabla+="<td>"+clientes[i].ingresos+"</td>";
     contenidoTabla+="<td>"+clientes[i].egresos+"</td>";
-    contenidoTabla+="<td><button>Actualizar</button></td>";
+    contenidoTabla += `<td><button onclick="seleccionarCliente('` + clientes[i].cedula + `')">Actualizar</button></td>`;
     contenidoTabla+="</tr>";
   }
   cmpTabla.innerHTML=contenidoTabla;
+}
+
+function buscarCliente(cedula){
+  let elementoCliente;
+  let clienteEncontrado=null;
+  for(let i=0;i<clientes.length;i++){
+    elementoCliente=clientes[i];
+    if(elementoCliente.cedula==cedula){
+      clienteEncontrado=elementoCliente;
+    }
+  }
+  return clienteEncontrado;
+}
+
+function seleccionarCliente(cedula){
+  clienteSeleccionado=buscarCliente(cedula);
+  mostrarTextoEnCaja("txtCedula",clienteSeleccionado.cedula);
+  mostrarTextoEnCaja("txtNombre",clienteSeleccionado.nombre);
+  mostrarTextoEnCaja("txtApellido",clienteSeleccionado.apellido);
+  mostrarTextoEnCaja("txtIngresos",clienteSeleccionado.ingresos);
+  mostrarTextoEnCaja("txtEgresos",clienteSeleccionado.egresos);
+}
+
+function limpiar(){
+  mostrarTextoEnCaja("txtCedula","");
+  mostrarTextoEnCaja("txtNombre","");
+  mostrarTextoEnCaja("txtApellido","");
+  mostrarTextoEnCaja("txtIngresos","");
+  mostrarTextoEnCaja("txtEgresos","");
 }
