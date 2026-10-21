@@ -16,6 +16,7 @@ function ocultarSecciones(){
   document.getElementById("parametros").classList.remove("activa");
   document.getElementById("clientes").classList.remove("activa");
   document.getElementById("credito").classList.remove("activa");
+  document.getElementById("Contacto").classList.remove("activa");
 }
 
 function mostrarSeccion(id){
@@ -39,16 +40,18 @@ function guardarCliente(){
   let apellido=recuperaraTexto("txtApellido");
   let ingresos=recuperarFloat("txtIngresos");
   let egresos=recuperarFloat("txtEgresos");
+  let mail=recuperaraTexto("txtcorreo")
 
   let clienteExistente=buscarCliente(cedula);
   if(clienteExistente==null){
-    let clienteGuardado={cedula,nombre,apellido,ingresos,egresos}
+    let clienteGuardado={cedula,nombre,apellido,ingresos,egresos, mail}
     clientes.push(clienteGuardado);
   }else {
     clienteExistente.nombre=nombre;
     clienteExistente.apellido=apellido;
     clienteExistente.ingresos=ingresos;
     clienteExistente.egresos=egresos;
+    clienteExistente.mail=mail;
   }
   pintarClientes();
 }
@@ -63,6 +66,7 @@ function pintarClientes(){
     contenidoTabla+="<td>"+clientes[i].apellido+"</td>";
     contenidoTabla+="<td>"+clientes[i].ingresos+"</td>";
     contenidoTabla+="<td>"+clientes[i].egresos+"</td>";
+    contenidoTabla+="<td>"+clientes[i].mail+"</td>";
     contenidoTabla += `<td><button onclick="seleccionarCliente('` + clientes[i].cedula + `')">Actualizar</button></td>`;
     contenidoTabla+="</tr>";
   }
@@ -88,6 +92,7 @@ function seleccionarCliente(cedula){
   mostrarTextoEnCaja("txtApellido",clienteSeleccionado.apellido);
   mostrarTextoEnCaja("txtIngresos",clienteSeleccionado.ingresos);
   mostrarTextoEnCaja("txtEgresos",clienteSeleccionado.egresos);
+  mostrarTextoEnCaja("txtcorreo",clienteSeleccionado.mail);
 }
 
 function limpiar(){
@@ -96,6 +101,7 @@ function limpiar(){
   mostrarTextoEnCaja("txtApellido","");
   mostrarTextoEnCaja("txtIngresos","");
   mostrarTextoEnCaja("txtEgresos","");
+  mostrarTextoEnCaja("txtcorreo","");
 }
 
 function buscarClienteCredito(){
@@ -109,6 +115,7 @@ function buscarClienteCredito(){
     contenido+="<p><strong>Apellido: </strong>"+cliente.apellido+"</p>";
     contenido+="<p><strong>Ingresos: </strong>"+cliente.ingresos+"</p>";
     contenido+="<p><strong>Egresos: </strong>"+cliente.egresos+"</p>";
+    contenido+="<p><strong>Correo: </strong>"+cliente.mail+"</p>";
   } else{
     contenido="<p>Cliente no encontrado</p>"; 
   }
