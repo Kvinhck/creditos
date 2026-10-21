@@ -17,6 +17,7 @@ function ocultarSecciones(){
   document.getElementById("clientes").classList.remove("activa");
   document.getElementById("credito").classList.remove("activa");
   document.getElementById("Contacto").classList.remove("activa");
+  document.getElementById("listaCreditos").classList.remove("activa");
 }
 
 function mostrarSeccion(id){
@@ -125,6 +126,8 @@ function buscarClienteCredito(){
 function calcularCredito(){
   let cmpResultado=document.getElementById("resultadoCredito");
   cmpResultado.className="";
+  let asignar=document.getElementById("btnAsignarCredito");
+  asignar.disabled=true;
   let cedula=recuperaraTexto("buscarCedulaCredito");
   let cliente=buscarCliente(cedula);
   let monto=recuperarFloat("montoCredito");
@@ -159,9 +162,58 @@ function calcularCredito(){
   if(aprobado){
     contenido+="<br><strong>Resultado: </strong>CRÉDITO APROBADO</br>";
     cmpResultado.className="aprobado";
+    asignar.disabled=false;
   } else {
     contenido+="<br><strong>Resultado: </strong>CRÉDITO RECHAZADO</br>";
     cmpResultado.className="rechazado";
   }
   document.getElementById("resultadoCredito").innerHTML=contenido;
+}
+
+function asignarCredito(){
+  let credito={
+    cedula: clienteSeleccionado.cedula,
+    nombre: clienteSeleccionado.nombre,
+    apellido: clienteSeleccionado.apellido,
+    monto: montoCalculado,
+    tasa: tasaInteres,
+    plazo: plazoCalculado,
+    cuota: cuotaCalculada
+  }
+
+  creditos.push(credito);
+
+}
+
+function buscarCreditos(cedula){
+  let creditosCliente=[];
+  for(let i=0;i<creditos.length;i++){
+    if(creditos[i].cedula==cedula){
+      creditosCliente.push(creditos[i]);
+    }
+  }
+  return creditosCliente;
+}
+
+function pintarCreditos(creditos){
+  let cmpTabla=document.getElementById("tablaCreditos");
+  let contenido="";
+  for (let i=0;i<creditos.length;i++){
+    contenido+="<tr>";
+    contenido+="<td>"+creditos[i].cedula+"</td>";
+    contenido+="<td>"+creditos[i].nombre+"</td>";
+    contenido+="<td>"+creditos[i].apellido+"</td>";
+    contenido+="<td>"+creditos[i].monto+"</td>";
+    contenido+="<td>"+creditos[i].tasa+"</td>";
+    contenido+="<td>"+creditos[i].plazo+"</td>";
+    contenido+="<td>"+creditos[i].cuota.toFixed(2)+"</td>";
+    contenido+="</tr>";
+  }
+  cmpTabla.innerHTML=contenido;
+}
+
+function buscarCreditosCliente(){
+  let cedula=recuperaraTexto("buscarCedulaListado");
+  let creditosCliente=buscarCreditos(cedula);
+  pintarCreditos(creditosCliente);
 }
